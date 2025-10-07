@@ -15,7 +15,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Creaflo",
+  title: "Creaflo - Home",
   description: "Continue to your workspace and create faster with AI.",
 };
 

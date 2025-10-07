@@ -12,7 +12,6 @@ import {
 } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import {
-  Play,
   Quote,
   Megaphone,
   Lightbulb,
@@ -20,92 +19,11 @@ import {
   History as HistoryIcon,
   Bookmark,
   LayoutGrid,
-  Sun,
-  Moon,
 } from "lucide-react";
+import { ThemeButton } from "@/components/ThemeButton";
+import { NavButton } from "@/components/NavButton";
+import { CreafloLogoSmall, CreafloLogoBig } from "@/components/Logo";
 
-/* ——— Simple Theme Toggle (no next-themes) ——— */
-function ThemeButton() {
-  const [isDark, setIsDark] = React.useState(false);
-
-  React.useEffect(() => {
-    const saved = localStorage.getItem("theme");
-    const systemDark = window.matchMedia(
-      "(prefers-color-scheme: dark)"
-    ).matches;
-    const dark = saved === "dark" || (!saved && systemDark);
-    setIsDark(dark);
-    document.documentElement.classList.toggle("dark", dark);
-  }, []);
-
-  const toggleTheme = () => {
-    const next = !isDark;
-    setIsDark(next);
-    document.documentElement.classList.toggle("dark", next);
-    localStorage.setItem("theme", next ? "dark" : "light");
-  };
-
-  return (
-    <button
-      type="button"
-      onClick={toggleTheme}
-      aria-label="Toggle theme"
-      title={`Switch to ${isDark ? "light" : "dark"} mode`}
-      className="flex h-9 w-9 items-center justify-center rounded-md border hover:bg-accent transition-colors"
-    >
-      {isDark ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
-    </button>
-  );
-}
-
-/* LOGO */
-function CreafloLogoSmall() {
-  return (
-    <span className="flex items-center text-primary">
-      CRE
-      <Play
-        className="mx-[2px] h-5 w-5 -rotate-[90deg] translate-y-[1px]"
-        fill="currentColor"
-        stroke="currentColor"
-      />
-      FLO
-    </span>
-  );
-}
-
-function CreafloLogoBig() {
-  return (
-    <span className="flex items-center text-5xl font-semibold text-primary sm:text-6xl">
-      CRE
-      <Play
-        className="mx-[2px] h-16 w-16 -rotate-[90deg] translate-y-[1px]"
-        fill="currentColor"
-        stroke="currentColor"
-      />
-      FLO
-    </span>
-  );
-}
-
-function NavButton({
-  onClick,
-  children,
-}: {
-  onClick: () => void;
-  children: React.ReactNode;
-}) {
-  return (
-    <button
-      type="button"
-      onClick={onClick}
-      className="transition-colors hover:text-foreground focus:outline-none focus:ring-2 focus:ring-ring/50"
-    >
-      {children}
-    </button>
-  );
-}
-
-/* Landing Page */
 export default function Landing() {
   const router = useRouter();
 
@@ -130,12 +48,16 @@ export default function Landing() {
         <nav className="hidden items-center gap-6 text-sm text-muted-foreground md:flex">
           <NavButton onClick={() => scrollTo("overview")}>Overview</NavButton>
           <NavButton onClick={() => scrollTo("features")}>Features</NavButton>
-          <NavButton onClick={() => scrollTo("design")}>Design</NavButton>
+          <NavButton onClick={() => scrollTo("design")}>Why</NavButton>
         </nav>
 
         <div className="flex items-center gap-2">
           <ThemeButton />
-          <Button type="button" onClick={() => router.push("/register")}>
+          <Button
+            className="cursor-pointer"
+            type="button"
+            onClick={() => router.push("/login")}
+          >
             Sign in
           </Button>
         </div>
@@ -164,7 +86,7 @@ export default function Landing() {
           <Button
             type="button"
             onClick={() => router.push("/register")}
-            className="mt-4 px-10 py-4 text-md"
+            className="mt-4 px-10 py-4 cursor-pointer text-md"
           >
             Get Started
           </Button>
@@ -322,9 +244,39 @@ export default function Landing() {
         <Separator />
       </div>
 
-      <footer className="px-6 py-6">
-        <div className="mx-auto flex max-w-[1100px] items-center justify-between text-xs text-muted-foreground">
-          <span>© {new Date().getFullYear()} CREAFLO</span>
+      <footer className="border-t bg-background/50 backdrop-blur-sm">
+        <div className="mx-auto flex max-w-[1100px] flex-col items-center justify-between gap-4 px-6 py-8 text-center text-sm text-muted-foreground md:flex-row md:text-left">
+          {/* Left */}
+          <div className="flex items-center gap-2 font-medium text-foreground">
+            <CreafloLogoSmall />
+            <span className="text-muted-foreground">
+              © {new Date().getFullYear()} Creaflo App
+            </span>
+          </div>
+
+          {/* Right */}
+          <div className="flex items-center gap-4">
+            <a
+              href="https://twitter.com"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="hover:text-primary transition-colors"
+            >
+              <svg className="h-4 w-4" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M22.46 6c-.77.35-1.6.58-2.46.69a4.22 4.22 0 001.85-2.34 8.2 8.2 0 01-2.63 1 4.11 4.11 0 00-7 3.75A11.66 11.66 0 013 5.1a4.1 4.1 0 001.27 5.47 4 4 0 01-1.86-.5v.05a4.11 4.11 0 003.3 4 4.1 4.1 0 01-1.85.07 4.12 4.12 0 003.84 2.85A8.25 8.25 0 012 19.54 11.63 11.63 0 008.29 21c7.55 0 11.68-6.26 11.68-11.68v-.53A8.4 8.4 0 0022.46 6z" />
+              </svg>
+            </a>
+            <a
+              href="https://github.com"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="hover:text-primary transition-colors"
+            >
+              <svg className="h-4 w-4" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M12 .5A12 12 0 000 12.67a12.1 12.1 0 008.21 11.52c.6.11.82-.26.82-.58v-2c-3.34.73-4.04-1.62-4.04-1.62a3.18 3.18 0 00-1.34-1.76c-1.1-.77.09-.75.09-.75a2.5 2.5 0 011.83 1.23 2.53 2.53 0 003.45 1 2.54 2.54 0 01.75-1.6c-2.67-.3-5.47-1.36-5.47-6.07a4.77 4.77 0 011.27-3.31 4.43 4.43 0 01.12-3.26s1-.32 3.3 1.24a11.44 11.44 0 016 0C16.58 4.18 17.6 4.5 17.6 4.5a4.42 4.42 0 01.12 3.26 4.77 4.77 0 011.27 3.31c0 4.72-2.81 5.76-5.49 6.06a2.84 2.84 0 01.81 2.2v3.26c0 .32.22.7.83.58A12.1 12.1 0 0024 12.67 12 12 0 0012 .5z" />
+              </svg>
+            </a>
+          </div>
         </div>
       </footer>
     </div>
