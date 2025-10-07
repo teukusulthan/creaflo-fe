@@ -6,6 +6,7 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { toast } from "sonner";
 import {
   Form,
   FormControl,
@@ -17,7 +18,9 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { Loader2, Play } from "lucide-react";
+
 import { registerSchema, type RegisterBody } from "@/schemas/auth.schema";
+import { registerRequest } from "@/services/auth.services";
 
 export default function RegisterPage() {
   const router = useRouter();
@@ -25,7 +28,7 @@ export default function RegisterPage() {
 
   const form = useForm<RegisterBody>({
     resolver: zodResolver(registerSchema),
-    defaultValues: { name: "", email: "", password: "" },
+    defaultValues: { name: "", email: "", password: "", confirmPassword: "" },
     mode: "onChange",
     reValidateMode: "onChange",
   });
@@ -33,8 +36,14 @@ export default function RegisterPage() {
   const { isValid, isSubmitting } = form.formState;
 
   const onSubmit = async (values: RegisterBody) => {
-    // kosong dulu: isi logic API nanti
-    console.log("Register form submitted:", values);
+    try {
+      const { confirmPassword, ...payload } = values;
+      const res = await registerRequest(payload);
+      toast.success(res?.message || "Registration successful");
+      router.push("/login");
+    } catch (e: any) {
+      toast.error(e?.message || "Registration failed");
+    }
   };
 
   return (
@@ -76,7 +85,7 @@ export default function RegisterPage() {
 
             <Form {...form}>
               <form
-                className="space-y-6"
+                className="space-y-3"
                 noValidate
                 onSubmit={form.handleSubmit(onSubmit)}
               >
@@ -107,7 +116,6 @@ export default function RegisterPage() {
                         <Input
                           type="email"
                           inputMode="email"
-                          autoComplete="email"
                           placeholder="you@example.com"
                           {...field}
                         />
@@ -126,7 +134,26 @@ export default function RegisterPage() {
                         <div className="relative">
                           <Input
                             type={showPassword ? "text" : "password"}
-                            autoComplete="new-password"
+                            placeholder="••••••••"
+                            {...field}
+                          />
+                        </div>
+                      </FormControl>
+                    </FormItem>
+                  )}
+                />
+
+                {/* Confirm Password */}
+                <FormField
+                  control={form.control}
+                  name="confirmPassword"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Confirm Password</FormLabel>
+                      <FormControl>
+                        <div className="relative">
+                          <Input
+                            type={showPassword ? "text" : "password"}
                             placeholder="••••••••"
                             {...field}
                           />

@@ -2,18 +2,15 @@ import { z } from "zod";
 
 export const registerSchema = z
   .object({
-    name: z
-      .string()
-      .trim()
-      .min(3, "Name must be at least 3 characters")
-      .max(100, "Name must be at most 100 characters"),
-    email: z.string().trim().toLowerCase().email("Invalid email format"),
-    password: z
-      .string()
-      .min(8, "Password must be at least 8 characters")
-      .max(100, "Password must be at most 100 characters"),
+    name: z.string().min(1, "Name is required"),
+    email: z.string().email("Invalid email"),
+    password: z.string().min(8, "Min 8 characters"),
+    confirmPassword: z.string().min(8, "Min 8 characters"),
   })
-  .strict();
+  .refine((v) => v.password === v.confirmPassword, {
+    path: ["confirmPassword"],
+    message: "Passwords do not match",
+  });
 
 export type RegisterBody = z.infer<typeof registerSchema>;
 
