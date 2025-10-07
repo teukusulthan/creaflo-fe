@@ -16,8 +16,11 @@ import {
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
-import { Loader2, Play } from "lucide-react";
+import { Loader2, Play, Eye, EyeOff } from "lucide-react";
+import { toast } from "sonner";
+
 import { loginSchema, type LoginBody } from "@/schemas/auth.schema";
+import { loginRequest } from "@/services/auth.services";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -33,8 +36,19 @@ export default function LoginPage() {
   const { isValid, isSubmitting } = form.formState;
 
   const onSubmit = async (values: LoginBody) => {
-    // kosong dulu: isi logic API nanti
-    console.log("Login form submitted:", values);
+    try {
+      const payload = {
+        email: values.email.trim(),
+        password: values.password,
+      };
+
+      await loginRequest(payload);
+      toast.success("Welcome back 👋");
+      router.push("/dashboard");
+    } catch (e: any) {
+      const msg = e?.message || "Login failed";
+      toast.error(msg);
+    }
   };
 
   return (
@@ -112,6 +126,20 @@ export default function LoginPage() {
                             placeholder="••••••••"
                             {...field}
                           />
+                          <button
+                            type="button"
+                            onClick={() => setShowPassword((s) => !s)}
+                            className="absolute right-2 top-1/2 -translate-y-1/2 p-1 text-muted-foreground hover:opacity-80"
+                            aria-label={
+                              showPassword ? "Hide password" : "Show password"
+                            }
+                          >
+                            {showPassword ? (
+                              <EyeOff className="h-4 w-4" />
+                            ) : (
+                              <Eye className="h-4 w-4" />
+                            )}
+                          </button>
                         </div>
                       </FormControl>
                     </FormItem>
