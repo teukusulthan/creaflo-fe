@@ -42,7 +42,6 @@ type Generation = {
   createdAt: string;
 };
 
-/** Ambil raw output saja dari string JSON atau plain text (sama seperti History) */
 function toRawOutput(text: string): string {
   if (!text) return "";
   const trimmed = text.trim();

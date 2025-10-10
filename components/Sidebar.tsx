@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import {
   LayoutGrid,
   PenTool,
@@ -12,6 +12,8 @@ import {
   Bookmark,
   LogOut,
 } from "lucide-react";
+import { toast } from "sonner";
+import { logoutRequest } from "@/services/auth.services";
 
 function matchPath(pathname: string, href: string) {
   if (href === "/dashboard") return pathname === "/dashboard";
@@ -38,7 +40,20 @@ const items = [
 ];
 
 export function Sidebar() {
+  const router = useRouter(); // ✅ Sekarang bisa dipakai
   const pathname = usePathname() || "/";
+
+  const onLogout = async () => {
+    try {
+      await logoutRequest();
+      toast.success("Logged out");
+      router.push("/login");
+      router.refresh();
+    } catch (e: any) {
+      const msg = e?.message || "Logout failed";
+      toast.error(msg);
+    }
+  };
 
   return (
     <aside className="fixed inset-y-0 left-0 hidden w-64 border-r bg-background pt-16 md:block">
@@ -71,7 +86,10 @@ export function Sidebar() {
         </ul>
 
         <div className="mt-auto pt-3">
-          <button className="flex w-full items-center gap-3 rounded-2xl px-4 py-3 text-left text-sm hover:bg-muted">
+          <button
+            onClick={onLogout}
+            className="flex cursor-pointer w-full items-center gap-3 rounded-2xl px-4 py-3 text-left text-sm hover:bg-muted"
+          >
             <LogOut className="h-4 w-4" />
             <span>Sign Out</span>
           </button>

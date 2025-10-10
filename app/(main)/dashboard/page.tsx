@@ -5,15 +5,8 @@ import { useRouter } from "next/navigation";
 import { FeatureCard } from "@/components/FeatureCard";
 import { PenTool, Target, Lightbulb, Hash } from "lucide-react";
 import { toast } from "sonner";
-import { getMe } from "@/services/auth.services";
-import { ApiResponse } from "@/types/common";
-
-type User = {
-  id: string;
-  name: string;
-  email: string;
-  createdAt: string;
-};
+import { meRequest } from "@/services/auth.services";
+import { User } from "@/services/auth.services";
 
 export default function DashboardPage() {
   const router = useRouter();
@@ -31,7 +24,7 @@ export default function DashboardPage() {
       id: "hook",
       icon: Target,
       title: "Hook Generator",
-      desc: "Create attention-grabbing hooks that stop the scroll",
+      desc: "Create attention-grabbing hooks that makes your audience stop the scrolls",
     },
     {
       id: "idea",
@@ -43,25 +36,26 @@ export default function DashboardPage() {
       id: "hashtag",
       icon: Hash,
       title: "Hashtag Generator",
-      desc: "Find the perfect hashtags to maximize your reach",
+      desc: "Automatically generate the perfect hashtags to maximize your reach by just describing your content.",
     },
   ];
 
   React.useEffect(() => {
     let mounted = true;
+
     (async () => {
       try {
-        const res = (await getMe()) as ApiResponse<User>;
+        const me = await meRequest();
         if (!mounted) return;
-        setUser(res.data ?? null);
-        console.log(user);
+        setUser(me);
       } catch (e: any) {
         toast.error(e?.message || "Failed to load user info");
-        setUser(null);
+        if (mounted) setUser(null);
       } finally {
         if (mounted) setLoading(false);
       }
     })();
+
     return () => {
       mounted = false;
     };

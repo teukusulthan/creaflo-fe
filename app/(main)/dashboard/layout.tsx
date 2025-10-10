@@ -4,6 +4,7 @@ import * as React from "react";
 import { Navbar } from "@/components/Navbar";
 import { Sidebar } from "@/components/Sidebar";
 import { Footer } from "@/components/Footer";
+import Protected from "@/components/Protected";
 
 export default function DashboardLayout({
   children,
@@ -32,15 +33,17 @@ export default function DashboardLayout({
   };
 
   return (
-    <div className="min-h-dvh bg-muted/30 text-foreground">
-      <Navbar isDark={isDark} toggleTheme={toggleTheme} />
-      <div className="flex">
-        <Sidebar />
-        <main className="ml-64 w-full">
-          <div className="mx-auto max-w-[1200px] px-8 py-10">{children}</div>
-          <Footer />
-        </main>
+    <Protected>
+      <div className="min-h-dvh bg-muted/30 text-foreground">
+        <Navbar isDark={isDark} toggleTheme={toggleTheme} />
+        <div className="flex">
+          <Sidebar />
+          <main className="ml-64 w-full">
+            <div className="mx-auto max-w-[1200px] px-8 py-10">{children}</div>
+            <Footer />
+          </main>
+        </div>
       </div>
-    </div>
+    </Protected>
   );
 }

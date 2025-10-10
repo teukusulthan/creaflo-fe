@@ -44,6 +44,7 @@ export default function LoginPage() {
 
       await loginRequest(payload);
       toast.success("Welcome back 👋");
+      await new Promise((r) => setTimeout(r, 200));
       router.push("/dashboard");
     } catch (e: any) {
       const msg = e?.message || "Login failed";
@@ -134,7 +135,7 @@ export default function LoginPage() {
 
                 <Button
                   type="submit"
-                  className="w-full"
+                  className="w-full cursor-pointer"
                   disabled={!isValid || isSubmitting}
                 >
                   {isSubmitting ? (
