@@ -7,6 +7,7 @@ import { PenTool, Target, Lightbulb, Hash } from "lucide-react";
 import { toast } from "sonner";
 import { meRequest } from "@/services/auth.services";
 import { User } from "@/services/auth.services";
+import FadeContent from "@/components/FadeContent";
 
 export default function DashboardPage() {
   const router = useRouter();

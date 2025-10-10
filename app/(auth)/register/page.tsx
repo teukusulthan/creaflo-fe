@@ -51,7 +51,7 @@ export default function RegisterPage() {
       {/* Left side */}
       <div className="relative hidden md:block">
         <Image
-          src="https://images.unsplash.com/photo-1617899516937-54fb61f7d3d2?q=80&w=627&auto=format&fit=crop&ixlib=rb-4.1.0"
+          src="https://images.unsplash.com/photo-1698299328112-0777b5d5364e?q=80&w=2670&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
           alt="Workspace illustration"
           fill
           priority

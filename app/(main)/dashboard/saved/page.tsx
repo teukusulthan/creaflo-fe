@@ -121,7 +121,6 @@ export default function SavedPage() {
       {loading ? (
         <div className="flex h-40 items-center justify-center text-muted-foreground">
           <Loader2 className="mr-2 h-5 w-5 animate-spin" />
-          Loading...
         </div>
       ) : items.length === 0 ? (
         <div className="py-10 text-center text-muted-foreground">

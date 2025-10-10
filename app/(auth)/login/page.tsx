@@ -44,7 +44,7 @@ export default function LoginPage() {
 
       await loginRequest(payload);
       toast.success("Welcome back 👋");
-      await new Promise((r) => setTimeout(r, 200));
+      await new Promise((r) => setTimeout(r, 400));
       router.push("/dashboard");
     } catch (e: any) {
       const msg = e?.message || "Login failed";
@@ -57,7 +57,7 @@ export default function LoginPage() {
       {/* Left side */}
       <div className="relative hidden md:block">
         <Image
-          src="https://images.unsplash.com/photo-1617899516937-54fb61f7d3d2?q=80&w=627&auto=format&fit=crop&ixlib=rb-4.1.0"
+          src="https://images.unsplash.com/photo-1698299328112-0777b5d5364e?q=80&w=2670&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
           alt="Workspace illustration"
           fill
           priority

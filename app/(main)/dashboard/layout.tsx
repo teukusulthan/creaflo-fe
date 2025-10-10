@@ -5,6 +5,7 @@ import { Navbar } from "@/components/Navbar";
 import { Sidebar } from "@/components/Sidebar";
 import { Footer } from "@/components/Footer";
 import Protected from "@/components/Protected";
+import FadeContent from "@/components/FadeContent";
 
 export default function DashboardLayout({
   children,
@@ -34,16 +35,25 @@ export default function DashboardLayout({
 
   return (
     <Protected>
-      <div className="min-h-dvh bg-muted/30 text-foreground">
-        <Navbar isDark={isDark} toggleTheme={toggleTheme} />
-        <div className="flex">
-          <Sidebar />
-          <main className="ml-64 w-full">
-            <div className="mx-auto max-w-[1200px] px-8 py-10">{children}</div>
-            <Footer />
-          </main>
+      <FadeContent
+        blur={true}
+        duration={1000}
+        easing="ease-out"
+        initialOpacity={0}
+      >
+        <div className="min-h-dvh bg-muted/30 text-foreground">
+          <Navbar isDark={isDark} toggleTheme={toggleTheme} />
+          <div className="flex">
+            <Sidebar />
+            <main className="ml-64 w-full">
+              <div className="mx-auto max-w-[1200px] px-8 py-10">
+                {children}
+              </div>
+              <Footer />
+            </main>
+          </div>
         </div>
-      </div>
+      </FadeContent>
     </Protected>
   );
 }

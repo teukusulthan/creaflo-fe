@@ -1,68 +1,58 @@
 "use client";
 import * as React from "react";
-import { useRouter } from "next/navigation";
-import {
-  loginRequest,
-  logoutRequest,
-  meRequest,
-} from "@/services/auth.services";
-import { toast } from "sonner";
+import { meRequest } from "@/services/auth.services";
 
-type User = { id: string; name: string; email: string };
+type AuthStatus = "checking" | "authenticated" | "unauthenticated";
+
+type User = {
+  id: string;
+  name: string;
+  email: string;
+} | null;
+
 type AuthCtx = {
-  user: User | null;
-  loading: boolean;
-  login: (email: string, password: string) => Promise<void>;
-  logout: () => Promise<void>;
+  user: User;
+  status: AuthStatus;
 };
 
-const AuthContext = React.createContext<AuthCtx | null>(null);
+const AuthContext = React.createContext<AuthCtx>({
+  user: null,
+  status: "checking",
+});
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
-  const router = useRouter();
-  const [user, setUser] = React.useState<User | null>(null);
-  const [loading, setLoading] = React.useState(true);
+  const [user, setUser] = React.useState<User>(null);
+  const [status, setStatus] = React.useState<AuthStatus>("checking");
 
   React.useEffect(() => {
+    let active = true;
     (async () => {
       try {
-        const me = await meRequest();
-        setUser(me);
+        const u = await meRequest();
+        if (!active) return;
+        if (u) {
+          setUser(u);
+          setStatus("authenticated");
+        } else {
+          setUser(null);
+          setStatus("unauthenticated");
+        }
       } catch {
+        if (!active) return;
         setUser(null);
-      } finally {
-        setLoading(false);
+        setStatus("unauthenticated");
       }
     })();
+    return () => {
+      active = false;
+    };
   }, []);
 
-  async function login(email: string, password: string) {
-    try {
-      await loginRequest({ email, password });
-      const me = await meRequest();
-      setUser(me);
-      toast.success("Logged in");
-      router.replace("/dashboard");
-    } catch (err: any) {
-      toast.error(err?.response?.data?.message || "Login failed");
-    }
-  }
-
-  async function logout() {
-    await logoutRequest();
-    setUser(null);
-    router.replace("/login");
-  }
-
   return (
-    <AuthContext.Provider value={{ user, loading, login, logout }}>
+    <AuthContext.Provider value={{ user, status }}>
       {children}
     </AuthContext.Provider>
   );
 }
 
-export const useAuth = () => {
-  const ctx = React.useContext(AuthContext);
-  if (!ctx) throw new Error("useAuth must be used in AuthProvider");
-  return ctx;
-};
+export const useAuth = () => React.useContext(AuthContext);

@@ -2,7 +2,6 @@
 
 import { Moon, Sun } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Play } from "lucide-react";
 
 export function Navbar({
