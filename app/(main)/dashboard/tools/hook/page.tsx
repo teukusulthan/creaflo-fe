@@ -6,7 +6,7 @@ export default function HookToolPage() {
       tool="hook"
       title="Hook Generator"
       description="Generate attention-grabbing video hooks that stop the scroll."
-      placeholder="E.g., turn boring tasks into 30-second wins..."
+      placeholder="Enter a topic to generate hooks"
     />
   );
 }

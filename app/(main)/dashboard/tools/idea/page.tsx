@@ -6,7 +6,7 @@ export default function IdeaToolPage() {
       tool="idea"
       title="Idea Generator"
       description="Get fresh content ideas tailored to your niche."
-      placeholder="Describe your niche and goals..."
+      placeholder="Describe your niche and goals"
     />
   );
 }

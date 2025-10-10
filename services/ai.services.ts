@@ -15,6 +15,8 @@ export type AiResult = {
   lang: Lang;
   output: string;
   model: string;
+  generationId: string;
+  isSaved: boolean;
 };
 
 export type AiData = { result: AiResult };
@@ -23,34 +25,59 @@ export type AiInput = { input: string; lang?: Lang };
 const defaultLang: Lang = "en";
 
 function normalizeResult(raw: any): AiResult {
-  if (
-    raw &&
-    typeof raw === "object" &&
-    "result" in raw &&
-    typeof raw.result !== "string"
-  ) {
-    return raw.result as AiResult;
+  if (raw && typeof raw === "object" && "result" in raw) {
+    const result = (raw as any).result;
+    return {
+      tool: result.tool ?? "idea",
+      lang: result.lang ?? defaultLang,
+      output: result.output ?? "",
+      model: result.model ?? "unknown",
+      generationId: result.generationId ?? "",
+      isSaved: !!result.isSaved,
+    };
   }
+
+  if (raw && typeof raw === "object" && "tool" in raw && "output" in raw) {
+    return {
+      tool: raw.tool ?? "idea",
+      lang: raw.lang ?? defaultLang,
+      output: raw.output ?? "",
+      model: raw.model ?? "unknown",
+      generationId: raw.generationId ?? "",
+      isSaved: !!raw.isSaved,
+    };
+  }
+
   if (raw && typeof raw === "object" && typeof raw.result === "string") {
     try {
-      return JSON.parse(raw.result) as AiResult;
+      const parsed = JSON.parse(raw.result);
+      return {
+        tool: parsed.tool ?? "idea",
+        lang: parsed.lang ?? defaultLang,
+        output: parsed.output ?? String(raw.result),
+        model: parsed.model ?? "unknown",
+        generationId: parsed.generationId ?? "",
+        isSaved: !!parsed.isSaved,
+      };
     } catch {
       return {
         tool: "idea",
         lang: defaultLang,
         output: String(raw.result),
         model: "unknown",
+        generationId: "",
+        isSaved: false,
       };
     }
   }
-  if (raw && typeof raw === "object" && "tool" in raw && "output" in raw) {
-    return raw as AiResult;
-  }
+
   return {
     tool: "idea",
     lang: defaultLang,
     output: "",
     model: "unknown",
+    generationId: "",
+    isSaved: false,
   };
 }
 
@@ -63,14 +90,10 @@ async function postAndParse(
   const { data } = await api.post<ApiEnvelope<AiData | { result: string }>>(
     url,
     body,
-    {
-      signal: opts?.signal,
-    }
+    { signal: opts?.signal }
   );
   return normalizeResult(data.data);
 }
-
-/**  Endpoint per feature  */
 
 export async function generateCaption(
   payload: AiInput,

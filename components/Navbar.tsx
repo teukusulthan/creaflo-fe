@@ -39,11 +39,6 @@ export function Navbar({
               <Moon className="h-5 w-5" />
             )}
           </Button>
-          <Avatar className="h-8 w-8 ring-1 ring-primary/20">
-            <AvatarFallback className="bg-primary/10 text-primary">
-              U
-            </AvatarFallback>
-          </Avatar>
         </div>
       </div>
     </header>

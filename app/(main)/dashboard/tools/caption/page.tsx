@@ -7,7 +7,7 @@ export default function CaptionToolPage() {
       tool="caption"
       title="Caption Generator"
       description="Create 3 unique captions in seconds."
-      placeholder="E.g., morning coffee routine, beach sunset, workout motivation..."
+      placeholder="Enter topic or short description to generate ideas"
     />
   );
 }

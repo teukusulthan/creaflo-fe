@@ -13,7 +13,6 @@ import {
   LogOut,
 } from "lucide-react";
 
-/** Match helper: avoid highlighting /dashboard on nested routes */
 function matchPath(pathname: string, href: string) {
   if (href === "/dashboard") return pathname === "/dashboard";
   return pathname === href || pathname.startsWith(href + "/");
