@@ -5,7 +5,7 @@ This repository contains the **frontend** app for Creaflo: the interface for gen
 
 ---
 
-## Features
+## ✨ Features
 
 - Simple form to input topic/idea for content
 - Generate multiple variations of:
@@ -18,7 +18,7 @@ This repository contains the **frontend** app for Creaflo: the interface for gen
 
 ---
 
-## Tech Stack
+## 💿 Tech Stack
 
 - Next.js
 - TypeScript
@@ -27,7 +27,7 @@ This repository contains the **frontend** app for Creaflo: the interface for gen
 
 ---
 
-## Getting Started
+## 🚀 Getting Started
 
 ### 1. Clone & Install
 
