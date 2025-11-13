@@ -53,7 +53,7 @@ function AutoResizeTextarea(
   const { value, onChange, minRows = 2, ...rest } = props;
   const ref = React.useRef<HTMLTextAreaElement | null>(null);
 
-  const resize = React.useCallback(() => {
+  const resize = React.useCallback((): void => {
     if (!ref.current) return;
     ref.current.style.height = "auto";
     ref.current.style.height = `${ref.current.scrollHeight}px`;
@@ -90,10 +90,10 @@ export function ToolScaffold({
   placeholder: string;
   tool: AiTool;
 }) {
-  const [topic, setTopic] = React.useState("");
-  const [languageLabel, setLanguageLabel] = React.useState("English");
+  const [topic, setTopic] = React.useState<string>("");
+  const [languageLabel, setLanguageLabel] = React.useState<string>("English");
   const [results, setResults] = React.useState<string[]>([]);
-  const [loading, setLoading] = React.useState(false);
+  const [loading, setLoading] = React.useState<boolean>(false);
   const [error, setError] = React.useState<string | undefined>(undefined);
   const [currentGen, setCurrentGen] = React.useState<CurrentGen>(null);
 
@@ -160,13 +160,22 @@ export function ToolScaffold({
         toast.error("generationId is missing in the response");
         return;
       }
-      setCurrentGen({ id: result.generationId, isSaved: !!result.isSaved });
+      setCurrentGen({
+        id: result.generationId,
+        isSaved: Boolean(result.isSaved),
+      });
       setResults(explodeOutput(result.output));
       lastRef.current = { topic: input, lang };
       window.scrollTo({ top: document.body.scrollHeight, behavior: "smooth" });
-    } catch (e: any) {
-      if (e?.name === "CanceledError" || e?.name === "AbortError") return;
-      const msg = e?.message || "Failed to generate output";
+    } catch (error: unknown) {
+      if (
+        error instanceof Error &&
+        (error.name === "CanceledError" || error.name === "AbortError")
+      ) {
+        return;
+      }
+      const msg =
+        error instanceof Error ? error.message : "Failed to generate output";
       setError(msg);
       toast.error(msg);
     } finally {
@@ -177,7 +186,10 @@ export function ToolScaffold({
 
   const onRegenerate = React.useCallback(async () => {
     const last = lastRef.current;
-    if (!last) return onGenerate();
+    if (!last) {
+      await onGenerate();
+      return;
+    }
 
     abortRef.current?.abort();
     abortRef.current = new AbortController();
@@ -190,12 +202,21 @@ export function ToolScaffold({
         toast.error("generationId is missing in the response");
         return;
       }
-      setCurrentGen({ id: result.generationId, isSaved: !!result.isSaved });
+      setCurrentGen({
+        id: result.generationId,
+        isSaved: Boolean(result.isSaved),
+      });
       setResults(explodeOutput(result.output));
       window.scrollTo({ top: document.body.scrollHeight, behavior: "smooth" });
-    } catch (e: any) {
-      if (e?.name === "CanceledError" || e?.name === "AbortError") return;
-      const msg = e?.message || "Failed to generate output";
+    } catch (error: unknown) {
+      if (
+        error instanceof Error &&
+        (error.name === "CanceledError" || error.name === "AbortError")
+      ) {
+        return;
+      }
+      const msg =
+        error instanceof Error ? error.message : "Failed to generate output";
       setError(msg);
       toast.error(msg);
     } finally {
@@ -213,17 +234,21 @@ export function ToolScaffold({
 
     try {
       const updated = await toggleSaveGeneration(currentGen.id);
-      if (!updated) throw new Error("Empty response from toggleSaveGeneration");
+      if (!updated) {
+        throw new Error("Empty response from toggleSaveGeneration");
+      }
 
       setCurrentGen((prev) =>
         prev ? { ...prev, isSaved: updated.isSaved } : prev
       );
       toast.success(updated.isSaved ? "Saved" : "Unsaved");
-    } catch (e: any) {
+    } catch (error: unknown) {
       setCurrentGen((prev) =>
         prev ? { ...prev, isSaved: !prev.isSaved } : prev
       );
-      toast.error(e?.message || "Failed to toggle save status");
+      const msg =
+        error instanceof Error ? error.message : "Failed to toggle save status";
+      toast.error(msg);
     }
   }, [currentGen]);
 
