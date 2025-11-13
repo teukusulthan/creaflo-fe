@@ -25,7 +25,8 @@ import { NavButton } from "@/components/NavButton";
 import { CreafloLogoSmall, CreafloLogoBig } from "@/components/Logo";
 import FadeContent from "@/components/FadeContent";
 import TrueFocus from "@/components/TrueFocus";
-import Squares from "@/components/Squares";
+// Squares dihapus karena tidak dipakai
+// import Squares from "@/components/Squares";
 
 export default function Landing() {
   const router = useRouter();
@@ -74,7 +75,6 @@ export default function Landing() {
 
         <main>
           {/* Overview */}
-
           <section
             id="overview"
             className="mx-auto max-w-[1100px] scroll-mt-20 px-6 pb-10 pt-14"
@@ -83,25 +83,6 @@ export default function Landing() {
               <CreafloLogoBig />
             </div>
 
-            {/* <h1 className="text-3xl font-semibold leading-tight tracking-tight sm:text-4xl">
-            A focused workspace for content creation
-          </h1> */}
-            {/* <TextType
-              className="text-3xl font-semibold leading-tight tracking-tight sm:text-4xl 
-             text-foreground/90 dark:text-foreground/80"
-              text={[
-                "A focused workspace",
-                "A space where ideas flow effortlessly 💡",
-                "Create content that inspires ✨",
-              ]}
-              typingSpeed={85}
-              deletingSpeed={40}
-              pauseDuration={1800}
-              showCursor={true}
-              cursorCharacter="▋"
-              cursorBlinkDuration={0.35}
-              variableSpeed={{ min: 60, max: 110 }}
-            /> */}
             <TrueFocus
               sentence="A focused workspace for content creation"
               blurAmount={2}
@@ -191,7 +172,7 @@ export default function Landing() {
             </div>
           </section>
 
-          {/* Design  */}
+          {/* Design */}
           <section
             id="design"
             className="mx-auto max-w-[1100px] scroll-mt-20 px-6 py-10"
@@ -282,7 +263,6 @@ export default function Landing() {
 
         <footer className="border-t bg-background/50 backdrop-blur-sm">
           <div className="mx-auto flex max-w-[1100px] flex-col items-center justify-between gap-4 px-6 py-8 text-center text-sm text-muted-foreground md:flex-row md:text-left">
-            {/* Left */}
             <div className="flex items-center gap-2 font-medium text-foreground">
               <CreafloLogoSmall />
               <span className="text-muted-foreground">
@@ -290,13 +270,12 @@ export default function Landing() {
               </span>
             </div>
 
-            {/* Right */}
             <div className="flex items-center gap-4">
               <a
                 href="https://twitter.com"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="hover:text-primary transition-colors"
+                className="transition-colors hover:text-primary"
               >
                 <svg
                   className="h-4 w-4"
@@ -310,7 +289,7 @@ export default function Landing() {
                 href="https://github.com"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="hover:text-primary transition-colors"
+                className="transition-colors hover:text-primary"
               >
                 <svg
                   className="h-4 w-4"

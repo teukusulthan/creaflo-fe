@@ -1,11 +1,12 @@
 "use client";
+
 import * as React from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/context/auth.context";
 import { Spinner } from "./ui/shadcn-io/spinner";
 
 export default function Protected({ children }: { children: React.ReactNode }) {
-  const { user, status } = useAuth();
+  const { status } = useAuth(); // user dihapus karena tidak dipakai
   const router = useRouter();
   const redirectedRef = React.useRef(false);
 

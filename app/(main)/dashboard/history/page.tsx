@@ -49,9 +49,7 @@ function toRawOutput(text: string): string {
         return Array.isArray(o) ? o.join("\n") : String(o ?? "");
       }
       return JSON.stringify(parsed, null, 2);
-    } catch {
-      /* fall through */
-    }
+    } catch {}
   }
   return trimmed;
 }

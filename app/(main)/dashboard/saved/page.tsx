@@ -1,7 +1,6 @@
 "use client";
 
 import * as React from "react";
-import { useRouter } from "next/navigation";
 import { ListItem } from "@/components/ListItem";
 import {
   Lightbulb,
@@ -24,8 +23,10 @@ import {
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
+import { getErrMsg } from "@/lib/utils";
 
 type ToolType = "caption" | "hook" | "idea" | "hashtag";
+
 const TOOL_ICON: Record<ToolType, React.ElementType> = {
   caption: PenTool,
   hook: Target,
@@ -45,27 +46,33 @@ type Generation = {
 function toRawOutput(text: string): string {
   if (!text) return "";
   const trimmed = text.trim();
+
   if (
     (trimmed.startsWith("{") && trimmed.endsWith("}")) ||
     (trimmed.startsWith("[") && trimmed.endsWith("]"))
   ) {
     try {
-      const parsed = JSON.parse(trimmed);
-      if (parsed && typeof parsed === "object" && "output" in parsed) {
-        const o = (parsed as any).output;
-        return Array.isArray(o) ? o.join("\n") : String(o ?? "");
+      const parsed: unknown = JSON.parse(trimmed);
+
+      // Kalau bentuknya { output: ... }
+      if (typeof parsed === "object" && parsed !== null && "output" in parsed) {
+        const o = (parsed as { output?: string | string[] }).output;
+        if (Array.isArray(o)) return o.join("\n");
+        if (typeof o === "string") return o;
+        return String(o ?? "");
       }
+
+      // Kalau JSON biasa, tampilkan pretty
       return JSON.stringify(parsed, null, 2);
     } catch {
-      /* ignore */
+      // kalau gagal parse, fallback ke text biasa
     }
   }
+
   return trimmed;
 }
 
 export default function SavedPage() {
-  const router = useRouter();
-
   const [loading, setLoading] = React.useState(true);
   const [items, setItems] = React.useState<Generation[]>([]);
 
@@ -79,8 +86,8 @@ export default function SavedPage() {
         const res = await getSaved();
         const arr = Array.isArray(res?.data) ? (res.data as Generation[]) : [];
         setItems(arr);
-      } catch (e: any) {
-        toast.error(e?.message || "Failed to load saved generations");
+      } catch (error: unknown) {
+        toast.error(getErrMsg(error, "Failed to load saved generations"));
       } finally {
         setLoading(false);
       }
@@ -109,7 +116,7 @@ export default function SavedPage() {
       {/* Header */}
       <section className="rounded-3xl border bg-card/40 px-8 py-7">
         <div className="flex items-center gap-2">
-          <Bookmark className="h-7 w-7 mr-2 text-primary" />
+          <Bookmark className="mr-2 h-7 w-7 text-primary" />
           <h1 className="text-3xl font-bold tracking-tight">Saved</h1>
         </div>
         <p className="mt-1 text-muted-foreground">
@@ -130,7 +137,6 @@ export default function SavedPage() {
         <div className="space-y-4">
           {items.map((g) => {
             const Icon = TOOL_ICON[g.tool];
-            const preview = toRawOutput(g.outputText);
             const date = new Date(g.createdAt).toLocaleString();
             return (
               <ListItem
