@@ -5,9 +5,29 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
-export function getErrMsg(error: any, fallback = "Something went wrong") {
-  if (error?.response?.data?.message) return error.response.data.message;
-  if (error?.response?.data?.error) return error.response.data.error;
-  if (error?.message) return error.message;
+type ErrorWithResponse = {
+  response?: {
+    data?: {
+      message?: string;
+      error?: string;
+    };
+  };
+  message?: string;
+};
+
+export function getErrMsg(
+  error: unknown,
+  fallback = "Something went wrong"
+): string {
+  if (typeof error === "string") return error;
+
+  if (typeof error === "object" && error !== null) {
+    const err = error as ErrorWithResponse;
+
+    if (err.response?.data?.message) return err.response.data.message;
+    if (err.response?.data?.error) return err.response.data.error;
+    if (err.message) return err.message;
+  }
+
   return fallback;
 }

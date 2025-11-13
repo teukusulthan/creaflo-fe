@@ -40,7 +40,7 @@ const items = [
 ];
 
 export function Sidebar() {
-  const router = useRouter(); // ✅ Sekarang bisa dipakai
+  const router = useRouter();
   const pathname = usePathname() || "/";
 
   const onLogout = async () => {
@@ -49,8 +49,8 @@ export function Sidebar() {
       toast.success("Logged out");
       router.push("/login");
       router.refresh();
-    } catch (e: any) {
-      const msg = e?.message || "Logout failed";
+    } catch (error: unknown) {
+      const msg = error instanceof Error ? error.message : "Logout failed";
       toast.error(msg);
     }
   };

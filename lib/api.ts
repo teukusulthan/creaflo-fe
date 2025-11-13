@@ -1,4 +1,4 @@
-import axios from "axios";
+import axios, { AxiosHeaders, type AxiosRequestHeaders } from "axios";
 
 export const api = axios.create({
   baseURL: process.env.NEXT_PUBLIC_API_URL,
@@ -13,14 +13,21 @@ export function setBearerToken(token: string | null) {
 }
 
 api.interceptors.request.use((config) => {
-  if (bearerToken) {
-    config.headers = config.headers || {};
-    if (config.headers.set) {
-      config.headers.set("Authorization", `Bearer ${bearerToken}`);
-    } else {
-      (config.headers as any)["Authorization"] = `Bearer ${bearerToken}`;
-    }
+  if (!bearerToken) return config;
+
+  const tokenValue = `Bearer ${bearerToken}`;
+
+  // Pastikan selalu ada headers
+  if (!config.headers) {
+    config.headers = new AxiosHeaders();
   }
+
+  if (config.headers instanceof AxiosHeaders) {
+    config.headers.set("Authorization", tokenValue);
+  } else {
+    (config.headers as AxiosRequestHeaders)["Authorization"] = tokenValue;
+  }
+
   return config;
 });
 
