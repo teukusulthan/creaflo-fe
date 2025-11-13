@@ -33,12 +33,20 @@ This repository contains the **frontend** app for Creaflo: the interface for gen
 
 ```bash
 git clone https://github.com/teukusulthan/creaflo-fe
-cd creaflo-frontend
+cd creaflo-fe
 npm install
 ```
 
 ### 2. Environment Variables
 
 ```bash
-NEXT_PUBLIC_API_URL= http://localhost:3000/api/v1
+NEXT_PUBLIC_API_URL= <api_url>
 ```
+
+### 3. Run Locally
+
+```bash
+npm run dev
+```
+
+The app will be available at: localhost:3000
